@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class TodoHardCodedService {
 
 	private static List<Todo> todos = new ArrayList();
-	private static int idCounter = 0;
+	private static long idCounter = 0;
 
 	static {
 		todos.add(new Todo(++idCounter, "aogrence", "Spring about programming", new Date(), false));
@@ -33,7 +33,7 @@ public class TodoHardCodedService {
 		return todo;
 	}
 
-	public Todo deleteById(int id) {
+	public Todo deleteById(long id) {
 		Todo willRemoveTodo = findById(id);
 		if (willRemoveTodo == null)
 			return null;
@@ -44,7 +44,7 @@ public class TodoHardCodedService {
 
 	}
 
-	public Todo findById(int id) {
+	public Todo findById(long id) {
 
 		return todos.stream().filter(todo -> todo.getId()==id).findFirst().orElse(null);
 

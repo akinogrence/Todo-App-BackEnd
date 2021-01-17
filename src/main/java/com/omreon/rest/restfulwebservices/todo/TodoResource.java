@@ -23,40 +23,44 @@ public class TodoResource {
 	@Autowired
 	private TodoHardCodedService todoHardCodedService;
 
+	@Autowired
+	private TodoJpaRepository todoJpaRepository;
+
 	@GetMapping(path = "/users/{username}/todos")
 	public List<Todo> getAllTodos(@PathVariable String username) {
-		return todoHardCodedService.findAll();
+		return todoJpaRepository.findByUsername(username);
 	}
+
 	@GetMapping(path = "/users/{username}/todos/{id}")
-	public Todo getTodoById(@PathVariable String username, @PathVariable int id) {
-		return todoHardCodedService.findById(id);
+	public Todo getTodoById(@PathVariable String username, @PathVariable long id) {
+		return todoJpaRepository.findById(id).get();
 	}
 
 	@DeleteMapping(path = "/users/{username}/todos/{id}")
-	public ResponseEntity<Void> delete(@PathVariable String username , @PathVariable int id) {
-		
-		Todo deletedTodo = todoHardCodedService.deleteById(id);
-		if(deletedTodo!=null) 
-		{
-			return ResponseEntity.noContent().build();		
-		}
-		return ResponseEntity.notFound().build();
-		
+	public ResponseEntity<Void> delete(@PathVariable String username, @PathVariable long id) {
+
+		todoJpaRepository.deleteById(id);
+		return ResponseEntity.ok().build();
+
 	}
-	
+
 	@PutMapping(path = "/users/{username}/todos/{id}")
-	public ResponseEntity<Todo> updateTodoById(@PathVariable String username , @PathVariable int id , @RequestBody Todo todo) {
-		System.out.println("testr");
-		Todo updatedTodo = todoHardCodedService.save(todo);
-		return new ResponseEntity<Todo>(updatedTodo,HttpStatus.OK);
+	public ResponseEntity<Todo> updateTodoById(@PathVariable String username, @PathVariable long id,
+			@RequestBody Todo todo) {
+		todo.setUsername(username);
+		Todo updatedTodo = todoJpaRepository.save(todo);
+		return new ResponseEntity<Todo>(updatedTodo, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(path = "/users/{username}/todos")
-	public ResponseEntity<Todo> save( @PathVariable String username , @RequestBody Todo todo) {
-		System.out.println("testr");
-		Todo createdTodo = todoHardCodedService.save(todo);;
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdTodo.getId()).toUri();
-		return  ResponseEntity.created(uri).build();
+	public ResponseEntity<Todo> save(@PathVariable String username, @RequestBody Todo todo) {
+		todo.setUsername(username);
+		Todo createdTodo = todoJpaRepository.save(todo);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(createdTodo.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 }

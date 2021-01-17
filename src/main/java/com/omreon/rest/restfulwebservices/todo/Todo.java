@@ -2,16 +2,22 @@ package com.omreon.rest.restfulwebservices.todo;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
 public class Todo {
 
-	private int id;
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String username;
 	private String description;
 	private Date targetDate;
 	private boolean completedStatus;
 
-	public Todo(int idCounter, String username, String description, Date targetDate, boolean completedStatus) {
+	public Todo(Long idCounter, String username, String description, Date targetDate, boolean completedStatus) {
 		super();
 		this.id =  idCounter;
 		this.username = username;
@@ -19,12 +25,14 @@ public class Todo {
 		this.targetDate = targetDate;
 		this.completedStatus = completedStatus;
 	}
+	
+	public Todo() {}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -58,14 +66,6 @@ public class Todo {
 
 	public void setCompletedStatus(boolean completedStatus) {
 		this.completedStatus = completedStatus;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
 	}
 
 	@Override
